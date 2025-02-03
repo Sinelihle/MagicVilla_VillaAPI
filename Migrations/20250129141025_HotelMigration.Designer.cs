@@ -4,6 +4,7 @@ using MagicVilla_VillaAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MagicVilla_VillaAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250129141025_HotelMigration")]
+    partial class HotelMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,70 +24,6 @@ namespace MagicVilla_VillaAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("MagicVilla_VillaAPI.Models.Dto.VillaNumber", b =>
-                {
-                    b.Property<int>("VillaNo")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SpecialDetails")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("VillaNo");
-
-                    b.ToTable("VillaNumbers");
-
-                    b.HasData(
-                        new
-                        {
-                            VillaNo = 101,
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7614),
-                            SpecialDetails = "Oceanfront villa with private pool and exclusive butler service.",
-                            UpdatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7627)
-                        },
-                        new
-                        {
-                            VillaNo = 102,
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7628),
-                            SpecialDetails = "Mountain-view villa with a cozy fireplace and outdoor jacuzzi.",
-                            UpdatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7628)
-                        },
-                        new
-                        {
-                            VillaNo = 103,
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7630),
-                            SpecialDetails = "Luxury suite with a private rooftop garden and 360-degree city views.",
-                            UpdatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7630)
-                        },
-                        new
-                        {
-                            VillaNo = 104,
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7631),
-                            SpecialDetails = "Secluded forest cabin villa with an indoor spa and meditation area.",
-                            UpdatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7631)
-                        },
-                        new
-                        {
-                            VillaNo = 105,
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7632),
-                            SpecialDetails = "Beachside villa with direct access to the white sand beach and a hammock lounge.",
-                            UpdatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7633)
-                        },
-                        new
-                        {
-                            VillaNo = 106,
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7633),
-                            SpecialDetails = "High-tech smart villa with automated lighting, voice-controlled climate, and premium entertainment setup.",
-                            UpdatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7634)
-                        });
-                });
 
             modelBuilder.Entity("MagicVilla_VillaAPI.Models.Hotel", b =>
                 {
@@ -147,7 +86,7 @@ namespace MagicVilla_VillaAPI.Migrations
                             Address = "123 Skyline Avenue",
                             City = "Johannesburg",
                             Country = "South Africa",
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7757),
+                            CreatedDate = new DateTime(2025, 1, 29, 16, 10, 24, 506, DateTimeKind.Local).AddTicks(5929),
                             Description = "A luxurious 5-star hotel offering world-class amenities and breathtaking city views.",
                             Email = "contact@grandhorizon.com",
                             Name = "Grand Horizon Hotel",
@@ -162,7 +101,7 @@ namespace MagicVilla_VillaAPI.Migrations
                             Address = "45 Beachfront Road",
                             City = "Cape Town",
                             Country = "South Africa",
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7760),
+                            CreatedDate = new DateTime(2025, 1, 29, 16, 10, 24, 506, DateTimeKind.Local).AddTicks(5955),
                             Description = "A beachfront resort with stunning ocean views and private beach access.",
                             Email = "info@sunsetbay.com",
                             Name = "Sunset Bay Resort",
@@ -177,7 +116,7 @@ namespace MagicVilla_VillaAPI.Migrations
                             Address = "99 Alpine Way",
                             City = "Drakensberg",
                             Country = "South Africa",
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7762),
+                            CreatedDate = new DateTime(2025, 1, 29, 16, 10, 24, 506, DateTimeKind.Local).AddTicks(5958),
                             Description = "A peaceful mountain lodge surrounded by nature, ideal for relaxation and hiking.",
                             Email = "stay@mountainlodge.com",
                             Name = "Mountain Lodge Retreat",
@@ -192,7 +131,7 @@ namespace MagicVilla_VillaAPI.Migrations
                             Address = "88 Main Street",
                             City = "Durban",
                             Country = "South Africa",
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7764),
+                            CreatedDate = new DateTime(2025, 1, 29, 16, 10, 24, 506, DateTimeKind.Local).AddTicks(5960),
                             Description = "A stylish and modern hotel in the heart of the city, perfect for business and leisure travelers.",
                             Email = "bookings@urbanescape.com",
                             Name = "Urban Escape Hotel",
@@ -207,7 +146,7 @@ namespace MagicVilla_VillaAPI.Migrations
                             Address = "12 Prestige Avenue",
                             City = "Pretoria",
                             Country = "South Africa",
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7765),
+                            CreatedDate = new DateTime(2025, 1, 29, 16, 10, 24, 506, DateTimeKind.Local).AddTicks(5962),
                             Description = "A luxury hotel offering elegant accommodations and premium services.",
                             Email = "contact@royalpalm.com",
                             Name = "The Royal Palm Hotel",
@@ -222,7 +161,7 @@ namespace MagicVilla_VillaAPI.Migrations
                             Address = "57 Savannah Lane",
                             City = "Kruger National Park",
                             Country = "South Africa",
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7767),
+                            CreatedDate = new DateTime(2025, 1, 29, 16, 10, 24, 506, DateTimeKind.Local).AddTicks(5965),
                             Description = "An exclusive safari lodge offering close encounters with wildlife and luxury accommodations.",
                             Email = "reservations@safarilodge.com",
                             Name = "Safari Lodge & Spa",
@@ -281,7 +220,7 @@ namespace MagicVilla_VillaAPI.Migrations
                         {
                             Id = 1,
                             Amenity = "",
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7788),
+                            CreatedDate = new DateTime(2025, 1, 29, 16, 10, 24, 506, DateTimeKind.Local).AddTicks(6582),
                             Details = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                             ImageUrl = "https://images.pexels.com/photos/28539583/pexels-photo-28539583/free-photo-of-majestic-mountain-peaks-at-sunrise.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                             Name = "Royal Villa",
@@ -294,7 +233,7 @@ namespace MagicVilla_VillaAPI.Migrations
                         {
                             Id = 2,
                             Amenity = "Pool, Free Wi-Fi, Private Beach Access",
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7790),
+                            CreatedDate = new DateTime(2025, 1, 29, 16, 10, 24, 506, DateTimeKind.Local).AddTicks(6591),
                             Details = "Experience the serenity of the ocean with breathtaking views and luxurious comfort. Perfect for a relaxing getaway.",
                             ImageUrl = "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                             Name = "Ocean Breeze Villa",
@@ -307,7 +246,7 @@ namespace MagicVilla_VillaAPI.Migrations
                         {
                             Id = 3,
                             Amenity = "Fireplace, Hiking Trails, Scenic Views",
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7792),
+                            CreatedDate = new DateTime(2025, 1, 29, 16, 10, 24, 506, DateTimeKind.Local).AddTicks(6594),
                             Details = "Nestled in the mountains, this villa offers a peaceful escape surrounded by nature. Ideal for adventurers and nature lovers.",
                             ImageUrl = "https://images.pexels.com/photos/6985016/pexels-photo-6985016.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                             Name = "Mountain Retreat Villa",
@@ -320,7 +259,7 @@ namespace MagicVilla_VillaAPI.Migrations
                         {
                             Id = 4,
                             Amenity = "Infinity Pool, Spa Services, Private Patio",
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7794),
+                            CreatedDate = new DateTime(2025, 1, 29, 16, 10, 24, 506, DateTimeKind.Local).AddTicks(6596),
                             Details = "A stunning villa in the heart of the desert, combining modern luxury with timeless beauty. A unique experience awaits.",
                             ImageUrl = "https://images.pexels.com/photos/220067/pexels-photo-220067.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                             Name = "Luxury Desert Villa",
@@ -333,7 +272,7 @@ namespace MagicVilla_VillaAPI.Migrations
                         {
                             Id = 5,
                             Amenity = "Outdoor Shower, Hammock, BBQ Area",
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7795),
+                            CreatedDate = new DateTime(2025, 1, 29, 16, 10, 24, 506, DateTimeKind.Local).AddTicks(6597),
                             Details = "A slice of paradise in the tropics. Enjoy vibrant greenery, exotic wildlife, and luxurious amenities.",
                             ImageUrl = "https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                             Name = "Tropical Paradise Villa",
@@ -346,7 +285,7 @@ namespace MagicVilla_VillaAPI.Migrations
                         {
                             Id = 6,
                             Amenity = "Garden, Fireplace, Board Games",
-                            CreatedDate = new DateTime(2025, 1, 30, 11, 3, 25, 360, DateTimeKind.Local).AddTicks(7797),
+                            CreatedDate = new DateTime(2025, 1, 29, 16, 10, 24, 506, DateTimeKind.Local).AddTicks(6599),
                             Details = "Escape to the countryside and enjoy the charm of rustic living with modern comforts in this cozy villa.",
                             ImageUrl = "https://images.pexels.com/photos/1643389/pexels-photo-1643389.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
                             Name = "Countryside Haven",
