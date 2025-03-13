@@ -1,9 +1,15 @@
 ﻿using System.Net;
 using AutoMapper;
+using MagicVilla_VillaAPI.Commands;
 using MagicVilla_VillaAPI.Data;
+using MagicVilla_VillaAPI.Handlers;
 using MagicVilla_VillaAPI.Models;
 using MagicVilla_VillaAPI.Models.Dto;
+using MagicVilla_VillaAPI.Queries;
 using MagicVilla_VillaAPI.Repository.IRepository;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,68 +24,51 @@ namespace MagicVilla_VillaAPI.Controllers
         protected APIResponse _response;
         private readonly IVillaRepository _dbVilla;
         private readonly IMapper _mapper;
-        public VillaAPIController(IVillaRepository dbVilla, IMapper mapper)
+        private readonly IMediator _mediator;
+
+        public VillaAPIController(IVillaRepository dbVilla, IMapper mapper, IMediator mediator)
         {
             _mapper = mapper;
             _dbVilla = dbVilla;
             this._response = new();
+            _mediator = mediator;
+
         }
 
         //methods in a controller are referred to as endpoints
         [HttpGet]
+        [ResponseCache(CacheProfileName = "Default30")]
+        //[Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<APIResponse>> GetVillas()
+        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery] string? search, [FromQuery] int? occupancy, int pageSize = 2, int pageNumber = 1)
         {
-            try
-            {
-                IEnumerable<Villa> villaList = await _dbVilla.GetAllAsync();
-                _response.Result = _mapper.Map<List<VillaDTO>>(villaList);
-                _response.StatusCode = HttpStatusCode.OK;
-
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.ErrorMessages.Add(ex.Message);
-                _response.isSuccess = false;
-            }
-
-            return _response;
+            var query = new GetAllVillasQuery(search, occupancy,pageSize, pageNumber);
+            var result = await _mediator.Send(query);
+            return Ok(result);
 
         }
 
+        ////overload for GetVillas 
+        //public async Task<ActionResult<APIResponse>> GetVillas([FromQuery] string? search, [FromQuery] int? occupancy)
+        //{
+        //    var query = new GetAllVillasQuery(search, occupancy);
+        //    var result = await _mediator.Send(query);
+        //    return Ok(result);
+
+        //}
+
         [HttpGet("{id}", Name = "GetVilla")]
+        //[Authorize(Roles = "admin")]
+        [ResponseCache(CacheProfileName ="Default30")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<APIResponse>> GetVilla(int id)
         {
-            try
-            {
-                if (id == 0)
-                {
-                    return BadRequest();
-                }
-                var villa = await _dbVilla.GetAsync(u => u.Id == id);
 
-                if (villa == null)
-                {
-                    return NotFound();
-                }
-                _response.Result = _mapper.Map<VillaDTO>(villa);
-                _response.StatusCode = HttpStatusCode.OK;
-                return Ok(_response);
-            }
-
-            catch (Exception ex)
-            {
-                _response.ErrorMessages.Add(ex.Message);
-                _response.isSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-            }
-
-            return _response;
+            var query = new GetVillaQuery(id);
+            var result = await _mediator.Send(query);
+            return Ok(result);
 
         }
 
@@ -90,42 +79,11 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<APIResponse>> CreateVilla([FromBody] VillaCreateDTO createDTO)
         {
-
-            try
-            {
-                if (await _dbVilla.GetAsync(villa => villa.Name.ToLower() == createDTO.Name.ToLower()) != null)
-                {
-                    ModelState.AddModelError("DuplicateVilla", "Villa already exists");
-                    return BadRequest(ModelState);
-                }
-
-                if (createDTO == null)
-                {
-                    return BadRequest(createDTO);
-                }
-
-                Villa model = _mapper.Map<Villa>(createDTO);
-
-                await _dbVilla.CreateAsync(model);
-                _response.Result = _mapper.Map<VillaDTO>(model);
-                _response.isSuccess = true;
-                _response.StatusCode = HttpStatusCode.Created;
-                //return Ok(_response);
-
-                return Ok(_response);
-
-            }
-
-            catch (Exception ex)
-            {
-                _response.ErrorMessages.Add(ex.Message);
-                _response.isSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-            }
-
-            return _response;
-
+            var command = new CreateVillaRequest(createDTO);
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
+
 
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -133,36 +91,40 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<APIResponse>> DeleteVilla(int id)
         {
-            try
-            {
-                if (id == 0)
-                {
-                    return BadRequest();
-                }
 
-                var selectVilla = await _dbVilla.GetAsync(delVilla => delVilla.Id == id);
+            var command = new DeleteVillaRequest(id);  
+            var result = await _mediator.Send(command);
+            return Ok(result);
+
+            //try
+            //{
+            //    if (id == 0)
+            //    {
+            //        return BadRequest();
+            //    }
+
+            //    var selectVilla = await _dbVilla.GetAsync(delVilla => delVilla.Id == id);
 
 
-                if (selectVilla == null)
-                {
-                    return NotFound();
-                }
+            //    if (selectVilla == null)
+            //    {
+            //        return NotFound();
+            //    }
 
-                await _dbVilla.RemoveAsync(selectVilla);
-                _response.StatusCode = HttpStatusCode.NoContent;
-                _response.isSuccess = true;
+            //    await _dbVilla.RemoveAsync(selectVilla);
+            //    _response.StatusCode = HttpStatusCode.NoContent;
+            //    _response.isSuccess = true;
 
-                return Ok(_response);
-            }
+            //    return Ok(_response);
+            //}
 
-            catch (Exception ex)
-            {
-                _response.ErrorMessages.Add(ex.Message);
-                _response.isSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-            }
+            //catch (Exception ex)
+            //{
+            //    _response.ErrorMessages.Add(ex.Message);
+            //    _response.isSuccess = false;
+            //    _response.StatusCode = HttpStatusCode.BadRequest;
+            //}
 
-            return _response;
         }
 
         [HttpPut("{id}")]
@@ -170,7 +132,7 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public async Task<ActionResult<APIResponse>> UpdateVilla(int id, [FromBody] VillaUpdateDTO updateDTO)
+        public async Task<ActionResult<APIResponse>> UpdateVilla([FromRoute]int id, [FromBody] VillaUpdateDTO updateDTO)
         {
             try
             {
